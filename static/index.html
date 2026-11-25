@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مركز الشفاء الطيب | المساعد الذكي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f3f7f6;
+      --surface: #ffffff;
+      --surface-2: #eaf3f1;
+      --border: #d9e6e3;
+      --text: #132a26;
+      --muted: #57736d;
+      --primary: #0d7a6b;
+      --primary-hover: #0a6357;
+      --primary-soft: #e0f2ef;
+      --user-bubble: #0d7a6b;
+      --user-text: #ffffff;
+      --bot-bubble: #ffffff;
+      --danger: #c0392b;
+      --danger-soft: #fdecea;
+      --shadow: 0 10px 30px rgba(13, 60, 52, 0.08);
+    }
+
+    body.dark {
+      --bg: #0d1615;
+      --surface: #14211f;
+      --surface-2: #1b2c29;
+      --border: #253b37;
+      --text: #e8f1ef;
+      --muted: #93aba6;
+      --primary: #1ca693;
+      --primary-hover: #25bfa9;
+      --primary-soft: rgba(28, 166, 147, 0.16);
+      --user-bubble: #158979;
+      --user-text: #ffffff;
+      --bot-bubble: #192926;
+      --danger: #e76f63;
+      --danger-soft: rgba(231, 111, 99, 0.14);
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Cairo", "Segoe UI", Tahoma, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100dvh;
+      overflow: hidden;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      height: 100dvh;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      gap: 18px;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), #19a892);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      font-weight: 800;
+      flex-shrink: 0;
+      box-shadow: 0 6px 16px rgba(13, 122, 107, 0.25);
+    }
+
+    .brand h1 {
+      font-size: 1.08rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .brand p {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .info-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 0.84rem;
+      line-height: 1.7;
+    }
+
+    .info-card h2 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .info-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin-bottom: 4px;
+    }
+
+    .quick-section h2 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .quick-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quick-btn {
+      text-align: right;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 11px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .quick-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      transform: translateX(-2px);
+    }
+
+    .disclaimer {
+      margin-top: auto;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: var(--surface-2);
+      padding: 10px 12px;
+      border-radius: 10px;
+      line-height: 1.6;
+    }
+
+    /* Main chat area */
+    .chat-main {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      min-width: 0;
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-btn {
+      display: none;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 7px 11px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #1abc9c;
+      box-shadow: 0 0 0 4px rgba(26, 188, 156, 0.2);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 13px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--primary);
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .welcome-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      max-width: 720px;
+      margin: 8px auto;
+      text-align: center;
+    }
+
+    .welcome-card h2 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .welcome-card p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .chip {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: 1px solid transparent;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .chip:hover {
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .msg-row {
+      display: flex;
+      flex-direction: column;
+      max-width: 78%;
+      animation: fadeUp 0.18s ease-out;
+    }
+
+    .msg-row.user {
+      align-self: flex-start;
+    }
+
+    .msg-row.bot {
+      align-self: flex-end;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bubble {
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      white-space: pre-wrap;
+      word-break: break-word;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    .msg-row.user .bubble {
+      background: var(--user-bubble);
+      color: var(--user-text);
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg-row.bot .bubble {
+      background: var(--bot-bubble);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg-row.error .bubble {
+      background: var(--danger-soft);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+    }
+
+    .msg-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 5px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      padding: 0 4px;
+    }
+
+    .copy-btn, .retry-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 2px 4px;
+    }
+
+    .copy-btn:hover, .retry-btn:hover {
+      text-decoration: underline;
+    }
+
+    /* Typing indicator */
+    .typing {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 2px;
+    }
+
+    .typing span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+      opacity: 0.4;
+      animation: blink 1.2s infinite ease-in-out;
+    }
+
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes blink {
+      0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); }
+      40% { opacity: 1; transform: scale(1.1); }
+    }
+
+    /* Input bar */
+    .composer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 14px 22px;
+    }
+
+    .composer-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 8px 12px;
+      transition: border-color 0.15s ease;
+    }
+
+    .composer-box:focus-within {
+      border-color: var(--primary);
+    }
+
+    textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-height: 140px;
+      min-height: 26px;
+      padding: 4px 2px;
+    }
+
+    textarea::placeholder {
+      color: var(--muted);
+    }
+
+    .send-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease, opacity 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .hint {
+      text-align: center;
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-top: 7px;
+    }
+
+    .overlay {
+      display: none;
+    }
+
+    @media (max-width: 860px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: -330px;
+        width: 300px;
+        height: 100dvh;
+        z-index: 30;
+        transition: right 0.25s ease;
+        box-shadow: var(--shadow);
+      }
+      .sidebar.open {
+        right: 0;
+      }
+      .overlay.show {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 20;
+      }
+      .menu-btn {
+        display: inline-block;
+      }
+      .msg-row {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-icon">+</div>
+        <div>
+          <h1>مركز الشفاء الطيب</h1>
+          <p>المساعد الذكي للزوار</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h2>معلومات المركز</h2>
+        <div class="info-row"><span>🕒</span><span>السبت–الخميس: 8:00 ص – 9:00 م</span></div>
+        <div class="info-row"><span>🚑</span><span>طوارئ الجمعة: 4:00 ع – 10:00 م</span></div>
+        <div class="info-row"><span>📍</span><span>صنعاء، شارع الزبيري، جولة سبأ</span></div>
+        <div class="info-row"><span>📞</span><span>الهاتف: 01-555-012</span></div>
+        <div class="info-row"><span>💬</span><span>واتساب: 777-000-123</span></div>
+      </div>
+
+      <div class="quick-section">
+        <h2>أسئلة شائعة سريعة</h2>
+        <div class="quick-list">
+          <button class="quick-btn" data-q="متى تفتحون؟ وش أوقات الدوام؟">🕒 أوقات الدوام والجمعة</button>
+          <button class="quick-btn" data-q="كم سعر الكشف؟">💵 أسعار الكشف</button>
+          <button class="quick-btn" data-q="هل عندكم طبيب أطفال؟">👶 عيادة الأطفال</button>
+          <button class="quick-btn" data-q="وش طرق الدفع المتاحة؟">💳 طرق الدفع (كريمي / نقداً)</button>
+          <button class="quick-btn" data-q="هل عندكم مختبر وكم سعر التحاليل؟">🧪 المختبر وأسعار التحاليل</button>
+          <button class="quick-btn" data-q="كم سعر الأشعة؟">🩻 أسعار الأشعة</button>
+          <button class="quick-btn" data-q="وين عنوانكم؟">📍 العنوان وموقف السيارات</button>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        يجيب هذا المساعد من ملف المعلومات الرسمي للمركز فقط ولا يقدم استشارات أو تشخيصاً طبياً.
+      </div>
+    </aside>
+
+    <main class="chat-main">
+      <header class="topbar">
+        <div class="topbar-right">
+          <button class="menu-btn" id="menuBtn" type="button">☰ القائمة</button>
+          <div class="status-pill">
+            <span class="dot"></span>
+            <span>مساعد مركز الشفاء الطيب</span>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-btn" id="themeBtn" type="button">🌙 الوضع الليلي</button>
+          <button class="icon-btn" id="clearBtn" type="button">🗑️ محادثة جديدة</button>
+        </div>
+      </header>
+
+      <section class="messages" id="messages">
+        <div class="welcome-card" id="welcomeCard">
+          <h2>أهلاً بك في مركز الشفاء الطيب</h2>
+          <p>اسألني عن أوقات الدوام، أسعار الكشف، التحاليل، الأشعة، العيادات المتوفرة، أو طرق الدفع والحجز.</p>
+          <div class="chips">
+            <button class="chip" data-q="متى تفتحون يوم الخميس؟">دوام الخميس</button>
+            <button class="chip" data-q="كم سعر الكشف عند طبيب الأطفال؟">سعر كشف الأطفال</button>
+            <button class="chip" data-q="هل تقبلون الدفع بكريمي؟">الدفع بكريمي</button>
+            <button class="chip" data-q="هل يلزم حجز موعد؟">حجز الموعد</button>
+          </div>
+        </div>
+      </section>
+
+      <footer class="composer">
+        <form class="composer-box" id="chatForm">
+          <textarea
+            id="questionInput"
+            rows="1"
+            maxlength="1000"
+            placeholder="اكتب سؤالك هنا... (مثال: كم سعر تحليل الدم الشامل؟)"
+            required
+          ></textarea>
+          <button class="send-btn" id="sendBtn" type="submit">إرسال</button>
+        </form>
+        <div class="hint">اضغط Enter للإرسال أو Shift+Enter لسطر جديد</div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const messagesEl = document.getElementById("messages");
+    const welcomeCard = document.getElementById("welcomeCard");
+    const chatForm = document.getElementById("chatForm");
+    const inputEl = document.getElementById("questionInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const themeBtn = document.getElementById("themeBtn");
+    const menuBtn = document.getElementById("menuBtn");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+
+    let isBusy = false;
+
+    function nowTime() {
+      return new Date().toLocaleTimeString("ar-YE", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function scrollToBottom() {
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function autoResize() {
+      inputEl.style.height = "auto";
+      inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + "px";
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+    }
+
+    function appendMessage(role, text, { isError = false, retryQuestion = null } = {}) {
+      if (welcomeCard) {
+        welcomeCard.style.display = "none";
+      }
+
+      const row = document.createElement("div");
+      row.className = `msg-row ${role}${isError ? " error" : ""}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = text;
+      row.appendChild(bubble);
+
+      const meta = document.createElement("div");
+      meta.className = "msg-meta";
+      const time = document.createElement("span");
+      time.textContent = nowTime();
+      meta.appendChild(time);
+
+      if (role === "bot" && !isError) {
+        const copyBtn = document.createElement("button");
+        copyBtn.type = "button";
+        copyBtn.className = "copy-btn";
+        copyBtn.textContent = "نسخ";
+        copyBtn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(text);
+            copyBtn.textContent = "تم النسخ ✓";
+            setTimeout(() => (copyBtn.textContent = "نسخ"), 1500);
+          } catch {
+            copyBtn.textContent = "تعذر النسخ";
+          }
+        });
+        meta.appendChild(copyBtn);
+      }
+
+      if (isError && retryQuestion) {
+        const retryBtn = document.createElement("button");
+        retryBtn.type = "button";
+        retryBtn.className = "retry-btn";
+        retryBtn.textContent = "إعادة المحاولة";
+        retryBtn.addEventListener("click", () => {
+          row.remove();
+          sendQuestion(retryQuestion, { skipUserBubble: true });
+        });
+        meta.appendChild(retryBtn);
+      }
+
+      row.appendChild(meta);
+      messagesEl.appendChild(row);
+      scrollToBottom();
+      return row;
+    }
+
+    function appendTyping() {
+      const row = document.createElement("div");
+      row.className = "msg-row bot";
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+      row.appendChild(bubble);
+      messagesEl.appendChild(row);
+      scrollToBottom();
+      return row;
+    }
+
+    async function sendQuestion(rawQuestion, { skipUserBubble = false } = {}) {
+      const question = rawQuestion.trim();
+      if (!question || isBusy) return;
+
+      isBusy = true;
+      sendBtn.disabled = true;
+      inputEl.value = "";
+      autoResize();
+      closeSidebar();
+
+      if (!skipUserBubble) {
+        appendMessage("user", question);
+      }
+
+      const typingRow = appendTyping();
+
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question }),
+        });
+
+        const data = await res.json().catch(() => ({}));
+        typingRow.remove();
+
+        if (!res.ok) {
+          const errMsg = data.detail || "حدث خطأ أثناء معالجة الطلب.";
+          appendMessage("bot", errMsg, { isError: true, retryQuestion: question });
+        } else {
+          appendMessage("bot", data.answer);
+        }
+      } catch {
+        typingRow.remove();
+        appendMessage("bot", "تعذر الاتصال بالخادم. تأكد من تشغيل التطبيق وحاول مجدداً.", {
+          isError: true,
+          retryQuestion: question,
+        });
+      } finally {
+        isBusy = false;
+        sendBtn.disabled = false;
+        inputEl.focus();
+      }
+    }
+
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      sendQuestion(inputEl.value);
+    });
+
+    inputEl.addEventListener("input", autoResize);
+    inputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendQuestion(inputEl.value);
+      }
+    });
+
+    document.querySelectorAll("[data-q]").forEach((btn) => {
+      btn.addEventListener("click", () => sendQuestion(btn.dataset.q));
+    });
+
+    clearBtn.addEventListener("click", () => {
+      messagesEl.querySelectorAll(".msg-row").forEach((el) => el.remove());
+      welcomeCard.style.display = "block";
+      inputEl.focus();
+    });
+
+    themeBtn.addEventListener("click", () => {
+      const dark = document.body.classList.toggle("dark");
+      themeBtn.textContent = dark ? "☀️ الوضع النهاري" : "🌙 الوضع الليلي";
+    });
+
+    menuBtn.addEventListener("click", () => {
+      sidebar.classList.add("open");
+      overlay.classList.add("show");
+    });
+
+    overlay.addEventListener("click", closeSidebar);
+  </script>
+</body>
+</html>
